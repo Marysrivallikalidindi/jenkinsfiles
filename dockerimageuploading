@@ -9,10 +9,15 @@ pipeline{
         maven "MAVEN3.9"
         jdk   "JDK17"
     }
+    environment{
+        registryCredential="ecr:ap-south-1:awscreds"
+        imageName="029139774083.dkr.ecr.ap-south-1.amazonaws.com/vprofileappimg"
+        vprofileRegistry="https://029139774083.dkr.ecr.ap-south-1.amazonaws.com"
+    }
     stages{
         stage('Fetch Code'){
             steps{
-                git branch:'atom',url:'https://github.com/hkhcoder/vprofile-project.git'
+                git branch:'docker',url:'https://github.com/hkhcoder/vprofile-project.git'
             }
         }
         stage('Build'){
@@ -81,6 +86,26 @@ pipeline{
                      type: 'war']
                   ]
                 )
+            }
+        }
+        stage('Build App Image') {
+          steps {
+       
+            script {
+                dockerImage = docker.build( imageName + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+                }
+          }
+    
+        }
+
+        stage('Upload App Image'){
+            steps{
+                script{
+                    docker.withRegistry(vprofileRegistry,registryCredential){
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest')
+                    }
+                }
             }
         }
     }
