@@ -13,8 +13,8 @@ pipeline{
         registryCredential="ecr:ap-south-1:awscreds"
         imageName="029139774083.dkr.ecr.ap-south-1.amazonaws.com/vprofileappimg"
         vprofileRegistry="https://029139774083.dkr.ecr.ap-south-1.amazonaws.com"
-        cluster = "vprofile"
-        servics = "vprofiletask-service-vybiyupy"
+        service = "vprotask-service"
+        cluster="vprofile"
     }
     stages{
         stage('Fetch Code'){
@@ -112,7 +112,7 @@ pipeline{
         }
         stage('Deploy to ecs'){
             steps{
-                withAWS(credentials:'awscreds',region:'ap-south-1')
+                withAWS(credentials: 'awscreds', region: 'ap-south-1' )
                 {
                     sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
                 }

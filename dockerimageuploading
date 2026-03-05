@@ -12,7 +12,7 @@ pipeline{
     environment{
         registryCredential="ecr:ap-south-1:awscreds"
         imageName="029139774083.dkr.ecr.ap-south-1.amazonaws.com/vprofileappimg"
-        vprofileRegistry="https://029139774083.dkr.ecr.ap-south-1.amazonaws.com"
+        vprofileRegistry="https://029139774083.dkr.ecr.ap-south-1.amazonaws.com/vprofileappimg"
     }
     stages{
         stage('Fetch Code'){
